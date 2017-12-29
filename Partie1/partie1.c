@@ -5,6 +5,7 @@
 #include <fcntl.h>     // pour les flags O_CREAT, O_EXCL, ...
 #include <unistd.h>    // sleep()
 #include <string.h>
+#include <time.h>       /* time_t, struct tm, difftime, time, mktime */
 
 pthread_mutex_t mutex;
 //pthread_mutex_t mutex2;
@@ -15,6 +16,8 @@ char debut_train2[2];
 char fin_train2[2];
 char debut_train3[2];
 char fin_train3[2];
+
+time_t timer;
 
 /*
 gcc -pthread partie1.c
@@ -59,6 +62,8 @@ void* TrainA(void* p) {
         }
         else {
             // Trajet en cours avec 3 secondes de temps de trajet
+            //time(&timer);  /* get current time; same as: timer = time(NULL)  */
+            printf("%f\n", (double) clock());
             printf("Train 1 : %s\n", train1[i%4]);
             sleep(3);
             printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
@@ -97,6 +102,7 @@ void* TrainB(void* p) {
         }
         else {
           // Trajet en cours avec 3 secondes de temps de trajet
+          printf("%f\n", (double) clock());
           printf("Train 2 : %s\n", train2[(i%5)]);
           sleep(3);
           printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
@@ -136,6 +142,7 @@ void* TrainC(void* p) {
           pthread_mutex_unlock(&mutex);
         } else {
           // Trajet en cours avec 3 secondes de temps de trajet
+          printf("%f\n", (double) clock());
           printf("Train 3 : %s\n", train3[(i%5)]);
           sleep(3);
           printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
