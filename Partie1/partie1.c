@@ -42,6 +42,8 @@ void* TrainA(void* p) {
         if(strcmp(debut_train1, fin_train2) == 0 && strcmp(fin_train1, debut_train2) == 0) {
             pthread_mutex_lock(&mutex);
             printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
+            sleep(3);
+            printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
             printf("\n1 %s %s\n", debut_train1, fin_train1);
             printf("%s %s\n", debut_train2, fin_train2);
             pthread_mutex_unlock(&mutex);
@@ -49,6 +51,8 @@ void* TrainA(void* p) {
         else if(strcmp(debut_train1, fin_train3) == 0 && strcmp(fin_train1, debut_train3) == 0) {
           pthread_mutex_lock(&mutex);
           printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
+          sleep(3);
+          printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
           printf("\n1 %s %s\n", debut_train1, fin_train1);
           printf("%s %s\n", debut_train3, fin_train3);
           pthread_mutex_unlock(&mutex);
@@ -78,6 +82,8 @@ void* TrainB(void* p) {
         if(strcmp(debut_train2, fin_train3) == 0 && strcmp(fin_train2, debut_train3) == 0) {
           pthread_mutex_lock(&mutex);
           printf("Train 2 en approche en sens inverse %s\n" , train2[i%5]);
+          sleep(3);
+          printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
           printf("\n1 %s %s\n", debut_train2, fin_train2);
           printf("%s %s\n", debut_train3, fin_train3);
           pthread_mutex_unlock(&mutex);
@@ -85,6 +91,8 @@ void* TrainB(void* p) {
         else if(strcmp(debut_train2, fin_train1) == 0 && strcmp(fin_train2, debut_train1) == 0) {
           pthread_mutex_lock(&mutex);
           printf("Train 2 en approche en sens inverse %s\n" , train2[i%5]);
+          sleep(3);
+          printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
           pthread_mutex_unlock(&mutex);
         }
         else {
@@ -112,6 +120,8 @@ void* TrainC(void* p) {
         if(strcmp(debut_train3, fin_train2) == 0 && strcmp(fin_train3, debut_train2) == 0) {
           pthread_mutex_lock(&mutex);
           printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)] );
+          sleep(3);
+          printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
           printf("\n1 %s %s\n", debut_train2, fin_train2);
           printf("%s %s\n", debut_train3, fin_train3);
           pthread_mutex_unlock(&mutex);
@@ -119,6 +129,8 @@ void* TrainC(void* p) {
         else if(strcmp(debut_train3, fin_train1) == 0 && strcmp(fin_train3, debut_train1) == 0) {
           pthread_mutex_lock(&mutex);
           printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)]);
+          sleep(3);
+          printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
           printf("\n1 %s %s\n", debut_train1, fin_train1);
           printf("%s %s\n", debut_train3, fin_train3);
           pthread_mutex_unlock(&mutex);
