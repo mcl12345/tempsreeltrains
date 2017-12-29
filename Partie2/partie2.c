@@ -5,16 +5,20 @@
 #include <fcntl.h>     // pour les flags O_CREAT, O_EXCL, ...
 #include <unistd.h>    // sleep()
 #include <string.h>
+#include <time.h>       /* time_t, struct tm, difftime, time, mktime */
 
 sem_t * trainA;
 sem_t * trainB;
-char debut_train1[2];
 sem_t * trainC;
+
+char debut_train1[2];
 char fin_train1[2];
 char debut_train2[2];
 char fin_train2[2];
 char debut_train3[2];
 char fin_train3[2];
+
+clock_t temps;
 
 char *substring(size_t start, size_t stop, const char *src, char *dst, size_t size)
 {
@@ -26,7 +30,7 @@ char *substring(size_t start, size_t stop, const char *src, char *dst, size_t si
    return dst;
 }
 
-void* a(void* p) {
+void* _TrainA_(void* p) {
     int i = 0;
     char train1[4][8] = {"A --> B", "B --> C", "C --> B", "B --> A"};
 
@@ -50,8 +54,11 @@ void* a(void* p) {
             printf("%s %s\n", debut_train3, fin_train3);
             sem_post(trainB);
         } else {
+            temps = clock();
+            printf("%f\n", (double) temps);
             printf("\ntrain 1 en approche : %s\n", train1[i%4]);
             sleep(3);
+            printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
             fflush(stdout);
         }
 
@@ -60,7 +67,7 @@ void* a(void* p) {
     return NULL;
 }
 
-void* b(void* p) {
+void* _TrainB_(void* p) {
     int i = 0;
     char train2[5][8] = {"A --> B", "B --> D", "D --> C", "C --> B", "B --> A"};
 
@@ -85,8 +92,11 @@ void* b(void* p) {
             sem_post(trainC);
         }
         else {
+            temps = clock();
+            printf("%f\n", (double) temps);
             printf("train 2 en approche : %s\n", train2[(i%5)]);
             sleep(3);
+            printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
             fflush(stdout);
         }
 
@@ -95,7 +105,7 @@ void* b(void* p) {
     return NULL;
 }
 
-void* c(void* p) {
+void* _TrainC_(void* p) {
     int i = 0;
     char train3[5][8] = {"A --> B", "B --> D", "D --> C", "C --> E", "E --> A"};
 
@@ -120,8 +130,11 @@ void* c(void* p) {
             sem_post(trainA);
         }
         else {
+            temps = clock();
+            printf("%f\n", (double) temps);
             printf("train 3 en approche : %s\n", train3[(i%5)]);
             sleep(3);
+            printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
             fflush(stdout);
         }
 
@@ -137,10 +150,10 @@ int main() {
     trainB = sem_open("trainB", O_CREAT, S_IRUSR | S_IWUSR, 0);
     trainC = sem_open("trainC", O_CREAT, S_IRUSR | S_IWUSR, 0);
 
-    pthread_create(&ID[0], NULL, b, NULL);
-    pthread_create(&ID[1], NULL, c, NULL);
+    pthread_create(&ID[0], NULL, _TrainB_, NULL);
+    pthread_create(&ID[1], NULL, _TrainC_, NULL);
 
-    a(NULL);
+    _TrainA_(NULL);
 
     pthread_join(ID[0], 0);
     pthread_join(ID[1], 0);

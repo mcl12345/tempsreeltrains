@@ -5,9 +5,12 @@
 #include <fcntl.h>     // pour les flags O_CREAT, O_EXCL, ...
 #include <unistd.h>    // sleep()
 #include <string.h>
+#include <time.h>       /* time_t, struct tm, difftime, time, mktime */
 
 /*  gcc partie3.c -lpthread
 */
+
+clock_t temps;
 
 pthread_rwlock_t lock;
 
@@ -28,7 +31,7 @@ char *substring(size_t start, size_t stop, const char *src, char *dst, size_t si
    return dst;
 }
 
-void* a(void* p) {
+void* TrainA(void* p) {
     int i = 0;
     char train1[4][8] = {"A --> B", "B --> C", "C --> B", "B --> A"};
 
@@ -50,8 +53,11 @@ void* a(void* p) {
           printf("\nTrain 1 en approche en sens inverse %s\n", train1[i%4] );
           pthread_rwlock_unlock(&lock);
         } else {
+            temps = clock() / 100;
+            printf("%f\n", (double) temps);
             printf("Train 1 : %s\n", train1[i%4]);
             sleep(3);
+            printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
             fflush(stdout);
         }
 
@@ -60,7 +66,7 @@ void* a(void* p) {
     return NULL;
 }
 
-void* b(void* p) {
+void* TrainB(void* p) {
     int i = 0;
     char train2[5][8] = {"A --> B", "B --> D", "D --> C", "C --> B", "B --> A"};
 
@@ -83,8 +89,11 @@ void* b(void* p) {
           pthread_rwlock_unlock(&lock);
         }
         else {
+          temps = clock() / 100;
+          printf("%f\n", (double) temps);
           printf("Train 2 : %s\n", train2[(i%5)]);
           sleep(3);
+          printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
           fflush(stdout);
         }
 
@@ -93,7 +102,7 @@ void* b(void* p) {
     return NULL;
 }
 
-void* c(void* p) {
+void* TrainC(void* p) {
     int i = 0;
     char train3[5][8] = {"A --> B", "B --> D", "D --> C", "C --> E", "E --> A"};
 
@@ -114,8 +123,11 @@ void* c(void* p) {
           pthread_rwlock_unlock(&lock);
         }
         else {
+          temps = clock() / 100;
+          printf("%f\n", (double) temps);
           printf("Train 3 : %s\n", train3[(i%5)]);
           sleep(3);
+          printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
           fflush(stdout);
         }
 
@@ -127,10 +139,10 @@ void* c(void* p) {
 int main() {
     pthread_t ID[3];
 
-    pthread_create(&ID[0], NULL, b, NULL);
-    pthread_create(&ID[1], NULL, c, NULL);
+    pthread_create(&ID[0], NULL, TrainB, NULL);
+    pthread_create(&ID[1], NULL, TrainC, NULL);
 
-    a(NULL);
+    TrainA(NULL);
 
     pthread_join(ID[0], 0);
     pthread_join(ID[1], 0);
