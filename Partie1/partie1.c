@@ -7,6 +7,8 @@
 #include <string.h>
 #include <time.h>       /* time_t, struct tm, difftime, time, mktime */
 
+#define _TEMPS_ 3
+
 pthread_mutex_t mutex1;
 pthread_mutex_t mutex2;
 pthread_mutex_t mutex3;
@@ -33,7 +35,7 @@ char *substring(size_t start, size_t stop, const char *src, char *dst, size_t si
    return dst;
 }
 
-void* TrainA(void* p) {
+void* TrainUn(void* p) {
     int i = 0;
     char train1[4][8] = {"A --> B", "B --> C", "C --> B", "B --> A"};
 
@@ -46,7 +48,7 @@ void* TrainA(void* p) {
             pthread_mutex_lock(&mutex3);
             pthread_mutex_lock(&mutex2);
             printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
-            sleep(rand()%10);
+            sleep(rand()%_TEMPS_);
             printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
             //printf("\n1 %s %s\n", debut_train1, fin_train1);
             //printf("%s %s\n", debut_train2, fin_train2);
@@ -57,7 +59,7 @@ void* TrainA(void* p) {
           pthread_mutex_lock(&mutex3);
           pthread_mutex_lock(&mutex2);
           printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
-          sleep(rand()%10);
+          sleep(rand()%_TEMPS_);
           printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
           //printf("\n1 %s %s\n", debut_train1, fin_train1);
           //printf("%s %s\n", debut_train3, fin_train3);
@@ -71,7 +73,7 @@ void* TrainA(void* p) {
             temps = clock();
             printf("%f - ", (double) temps / 100);
             printf("Train 1 : %s\n", train1[i%4]);
-            sleep(rand()%10);
+            sleep(rand()%_TEMPS_);
             temps = clock();
             printf("%f - ", (double) temps / 100);
             printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
@@ -83,7 +85,7 @@ void* TrainA(void* p) {
     return NULL;
 }
 
-void* TrainB(void* p) {
+void* TrainDeux(void* p) {
     int i = 0;
     char train2[5][8] = {"A --> B", "B --> D", "D --> C", "C --> B", "B --> A"};
 
@@ -97,7 +99,7 @@ void* TrainB(void* p) {
           pthread_mutex_lock(&mutex1);
           pthread_mutex_lock(&mutex3);
           printf("Train 2 en approche en sens inverse %s\n" , train2[i%5]);
-          sleep(rand()%10);
+          sleep(rand()%_TEMPS_);
           printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
           //printf("\n1 %s %s\n", debut_train2, fin_train2);
           //printf("%s %s\n", debut_train3, fin_train3);
@@ -108,7 +110,7 @@ void* TrainB(void* p) {
           pthread_mutex_lock(&mutex1);
           pthread_mutex_lock(&mutex3);
           printf("Train 2 en approche en sens inverse %s\n" , train2[i%5]);
-          sleep(rand()%1000);
+          sleep(rand()%_TEMPS_);
           printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
           pthread_mutex_unlock(&mutex1);
           pthread_mutex_unlock(&mutex3);
@@ -119,7 +121,7 @@ void* TrainB(void* p) {
           temps = clock();
           printf("%f - ", (double) temps / 100);
           printf("Train 2 : %s\n", train2[(i%5)]);
-          sleep(rand()%10);
+          sleep(rand()%_TEMPS_);
           temps = clock();
           printf("%f - ", (double) temps / 100);
           printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
@@ -131,7 +133,7 @@ void* TrainB(void* p) {
     return NULL;
 }
 
-void* TrainC(void* p) {
+void* TrainTrois(void* p) {
     int i = 0;
     char train3[5][8] = {"A --> B", "B --> D", "D --> C", "C --> E", "E --> A"};
 
@@ -145,7 +147,7 @@ void* TrainC(void* p) {
           pthread_mutex_lock(&mutex2);
           pthread_mutex_lock(&mutex1);
           printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)] );
-          sleep(rand()%10);
+          sleep(rand()%_TEMPS_);
           printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
           //printf("\n1 %s %s\n", debut_train2, fin_train2);
           //printf("%s %s\n", debut_train3, fin_train3);
@@ -156,7 +158,7 @@ void* TrainC(void* p) {
           pthread_mutex_lock(&mutex2);
           pthread_mutex_lock(&mutex1);
           printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)]);
-          sleep(rand()%10);
+          sleep(rand()%_TEMPS_);
           printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
           //printf("\n1 %s %s\n", debut_train1, fin_train1);
           //printf("%s %s\n", debut_train3, fin_train3);
@@ -168,7 +170,7 @@ void* TrainC(void* p) {
           temps = clock();
           printf("%f - ", (double) temps / 100);
           printf("Train 3 : %s\n", train3[(i%5)]);
-          sleep(rand()%10);
+          sleep(rand()%_TEMPS_);
           temps = clock();
           printf("%f - ", (double) temps / 100);
           fflush(stdout);
@@ -189,10 +191,10 @@ int main() {
     pthread_mutex_init(&mutex2, NULL);
     pthread_mutex_init(&mutex3, NULL);
 
-    pthread_create(&ID[0], NULL, TrainB, NULL);
-    pthread_create(&ID[1], NULL, TrainC, NULL);
+    pthread_create(&ID[0], NULL, TrainDeux, NULL);
+    pthread_create(&ID[1], NULL, TrainTrois, NULL);
 
-    TrainA(NULL);
+    TrainUn(NULL);
 
     pthread_join(ID[0], 0);
     pthread_join(ID[1], 0);

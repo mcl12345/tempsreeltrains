@@ -7,9 +7,11 @@
 #include <string.h>
 #include <time.h>       /* time_t, struct tm, difftime, time, mktime */
 
-sem_t * trainA;
-sem_t * trainB;
-sem_t * trainC;
+#define _TEMPS_   10
+
+sem_t * semTrainUn;
+sem_t * semTrainDeux;
+sem_t * semTrainTrois;
 
 char debut_train1[2];
 char fin_train1[2];
@@ -19,6 +21,8 @@ char debut_train3[2];
 char fin_train3[2];
 
 clock_t temps;
+
+// pour compiler : gcc partie2.c -lpthread
 
 char *substring(size_t start, size_t stop, const char *src, char *dst, size_t size)
 {
@@ -30,7 +34,7 @@ char *substring(size_t start, size_t stop, const char *src, char *dst, size_t si
    return dst;
 }
 
-void* _TrainA_(void* p) {
+void* _TrainUn_(void* p) {
     int i = 0;
     char train1[4][8] = {"A --> B", "B --> C", "C --> B", "B --> A"};
 
@@ -41,23 +45,33 @@ void* _TrainA_(void* p) {
 
         // Compare avec les autres trains le trajet :
         if(strcmp(debut_train1, fin_train2) == 0 && strcmp(fin_train1, debut_train2) == 0) {
-            sem_wait(trainA);
-            printf("\ntrain 1 en approche en sens inverse %s\n", train1[i%4] );
+            sem_wait(semTrainUn);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
+            sleep(rand()%_TEMPS_);
             printf("\n1 %s %s\n", debut_train1, fin_train1);
             printf("%s %s\n", debut_train2, fin_train2);
-            sem_post(trainB);
+            printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
+            sem_post(semTrainDeux);
         }
         else if(strcmp(debut_train1, fin_train3) == 0 && strcmp(fin_train1, debut_train3) == 0) {
-            sem_wait(trainA);
-            printf("\ntrain 1 en approche en sens inverse %s\n", train1[i%4] );
+            sem_wait(semTrainUn);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
+            sleep(rand()%_TEMPS_);
             printf("\n2 %s %s\n", debut_train1, fin_train1);
             printf("%s %s\n", debut_train3, fin_train3);
-            sem_post(trainB);
+            printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
+            sem_post(semTrainDeux);
         } else {
             temps = clock();
-            printf("%f\n", (double) temps);
-            printf("\ntrain 1 en approche : %s\n", train1[i%4]);
-            sleep(3);
+            printf("%f - ", (double) temps / 100);
+            printf("Train 1 en approche : %s\n", train1[i%4]);
+            sleep(rand()%_TEMPS_);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
             printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
             fflush(stdout);
         }
@@ -67,7 +81,7 @@ void* _TrainA_(void* p) {
     return NULL;
 }
 
-void* _TrainB_(void* p) {
+void* _TrainDeux_(void* p) {
     int i = 0;
     char train2[5][8] = {"A --> B", "B --> D", "D --> C", "C --> B", "B --> A"};
 
@@ -78,24 +92,34 @@ void* _TrainB_(void* p) {
 
         // Compare avec les autres trains le trajet :
         if(strcmp(debut_train2, fin_train3) == 0 && strcmp(fin_train2, debut_train3) == 0) {
-            sem_wait(trainB);
-            printf("train 2 en approche en sens inverse %s\n" , train2[i%5]);
+            sem_wait(semTrainDeux);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("Train 2 en approche en sens inverse %s\n" , train2[i%5]);
+            sleep(rand()%_TEMPS_);
             printf("\n3 %s %s\n", debut_train2, fin_train2);
             printf("%s %s\n", debut_train3, fin_train3);
-            sem_post(trainC);
+            printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
+            sem_post(semTrainTrois);
         }
         else if(strcmp(debut_train2, fin_train1) == 0 && strcmp(fin_train2, debut_train1) == 0) {
-            sem_wait(trainB);
-            printf("train 2 en approche en sens inverse %s\n" , train2[i%5]);
+            sem_wait(semTrainDeux);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("Train 2 en approche en sens inverse %s\n" , train2[i%5]);
+            sleep(rand()%_TEMPS_);
             printf("\n4 %s %s\n", debut_train1, fin_train1);
             printf("%s %s\n", debut_train2, fin_train2);
-            sem_post(trainC);
+            printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
+            sem_post(semTrainTrois);
         }
         else {
             temps = clock();
-            printf("%f\n", (double) temps);
+            printf("%f - ", (double) temps / 100);
             printf("train 2 en approche : %s\n", train2[(i%5)]);
-            sleep(3);
+            sleep(rand()%_TEMPS_);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
             printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
             fflush(stdout);
         }
@@ -105,7 +129,7 @@ void* _TrainB_(void* p) {
     return NULL;
 }
 
-void* _TrainC_(void* p) {
+void* _TrainTrois_(void* p) {
     int i = 0;
     char train3[5][8] = {"A --> B", "B --> D", "D --> C", "C --> E", "E --> A"};
 
@@ -116,24 +140,34 @@ void* _TrainC_(void* p) {
 
         // Compare avec les autres trains le trajet :
         if(strcmp(debut_train3, fin_train2) == 0 && strcmp(fin_train3, debut_train2) == 0) {
-            sem_wait(trainC);
-            printf("train 3 en approche en sens inverse %s\n", train3[(i%5)] );
+            sem_wait(semTrainTrois);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)] );
+            sleep(rand()%_TEMPS_);
             printf("\n5 %s %s\n", debut_train3, fin_train3);
             printf("%s %s\n", debut_train2, fin_train2);
-            sem_post(trainA);
+            printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
+            sem_post(semTrainUn);
         }
         else if(strcmp(debut_train3, fin_train1) == 0 && strcmp(fin_train3, debut_train1) == 0) {
-            sem_wait(trainC);
-            printf("train 3 en approche en sens inverse %s\n", train3[(i%5)]);
+            sem_wait(semTrainTrois);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)]);
+            sleep(rand()%_TEMPS_);
             printf("\n6 %s %s\n", debut_train3, fin_train3);
             printf("%s %s\n", debut_train1, fin_train1);
-            sem_post(trainA);
+            printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
+            sem_post(semTrainUn);
         }
         else {
             temps = clock();
-            printf("%f\n", (double) temps);
+            printf("%f - ", (double) temps / 100);
             printf("train 3 en approche : %s\n", train3[(i%5)]);
-            sleep(3);
+            sleep(rand()%_TEMPS_);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
             printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
             fflush(stdout);
         }
@@ -146,24 +180,26 @@ void* _TrainC_(void* p) {
 int main() {
     pthread_t ID[3];
 
-    trainA = sem_open("trainA", O_CREAT, S_IRUSR | S_IWUSR, 3);
-    trainB = sem_open("trainB", O_CREAT, S_IRUSR | S_IWUSR, 0);
-    trainC = sem_open("trainC", O_CREAT, S_IRUSR | S_IWUSR, 0);
+    srand(time(NULL));
 
-    pthread_create(&ID[0], NULL, _TrainB_, NULL);
-    pthread_create(&ID[1], NULL, _TrainC_, NULL);
+    semTrainUn    = sem_open("semTrainUn", O_CREAT, S_IRUSR | S_IWUSR, 3);
+    semTrainDeux  = sem_open("semTrainDeux", O_CREAT, S_IRUSR | S_IWUSR, 0);
+    semTrainTrois = sem_open("semTrainTrois", O_CREAT, S_IRUSR | S_IWUSR, 0);
 
-    _TrainA_(NULL);
+    pthread_create(&ID[0], NULL, _TrainDeux_, NULL);
+    pthread_create(&ID[1], NULL, _TrainTrois_, NULL);
+
+    _TrainUn_(NULL);
 
     pthread_join(ID[0], 0);
     pthread_join(ID[1], 0);
 
-    sem_close(trainA);
-    sem_close(trainB);
-    sem_close(trainC);
-    sem_unlink("trainA");
-    sem_unlink("trainB");
-    sem_unlink("trainC");
+    sem_close(semTrainUn);
+    sem_close(semTrainDeux);
+    sem_close(semTrainTrois);
+    sem_unlink("semTrainUn");
+    sem_unlink("semTrainDeux");
+    sem_unlink("semTrainTrois");
 
     return 0;
 }

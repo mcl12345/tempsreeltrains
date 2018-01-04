@@ -1,3 +1,5 @@
-all: gcc partie1.c -lpthread
+all:
+	gcc partie1.c -lpthread
 
-clean: rm a.out
+clean:
+	rm a.out

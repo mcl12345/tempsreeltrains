@@ -5,10 +5,9 @@
 #include <fcntl.h>     // pour les flags O_CREAT, O_EXCL, ...
 #include <unistd.h>    // sleep()
 #include <string.h>
-#include <time.h>       /* time_t, struct tm, difftime, time, mktime */
+#include <time.h>       // time_t, struct tm, difftime, time, mktime
 
-/*  gcc partie3.c -lpthread
-*/
+#define _TEMPS_   3
 
 clock_t temps;
 
@@ -31,7 +30,7 @@ char *substring(size_t start, size_t stop, const char *src, char *dst, size_t si
    return dst;
 }
 
-void* TrainA(void* p) {
+void* TrainUn(void* p) {
     int i = 0;
     char train1[4][8] = {"A --> B", "B --> C", "C --> B", "B --> A"};
 
@@ -40,25 +39,40 @@ void* TrainA(void* p) {
         substring(0, 1, train1[i%4], debut_train1, sizeof(debut_train1));
         substring(6, 1, train1[i%4], fin_train1, sizeof(fin_train1));
 
-        //sem_wait(trainA);
         // Compare avec les autres trains le trajet et bloque si la trajectoire inverse d'un autre train est déjà en cours :
         if(strcmp(debut_train1, fin_train2) == 0 && strcmp(fin_train1, debut_train2) == 0) {
             pthread_rwlock_rdlock(&lock);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
             printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
+            sleep(rand()%_TEMPS_);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
             pthread_rwlock_unlock(&lock);
         }
         // Compare avec les autres trains le trajet et bloque si la trajectoire inverse d'un autre train est déjà en cours :
         else if(strcmp(debut_train1, fin_train3) == 0 && strcmp(fin_train1, debut_train3) == 0) {
-          pthread_rwlock_rdlock(&lock);
-          printf("\nTrain 1 en approche en sens inverse %s\n", train1[i%4] );
-          pthread_rwlock_unlock(&lock);
+            pthread_rwlock_rdlock(&lock);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("\nTrain 1 en approche en sens inverse %s\n", train1[i%4] );
+            sleep(rand()%_TEMPS_);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
+            printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
+            pthread_rwlock_unlock(&lock);
         } else {
+            pthread_rwlock_rdlock(&lock);
             temps = clock() / 100;
-            printf("%f\n", (double) temps);
+            printf("%f - ", (double) temps);
             printf("Train 1 : %s\n", train1[i%4]);
-            sleep(3);
+            sleep(rand()%_TEMPS_);
+            temps = clock();
+            printf("%f - ", (double) temps / 100);
             printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
             fflush(stdout);
+            pthread_rwlock_unlock(&lock);
         }
 
         i++;
@@ -66,7 +80,7 @@ void* TrainA(void* p) {
     return NULL;
 }
 
-void* TrainB(void* p) {
+void* TrainDeux(void* p) {
     int i = 0;
     char train2[5][8] = {"A --> B", "B --> D", "D --> C", "C --> B", "B --> A"};
 
@@ -75,26 +89,42 @@ void* TrainB(void* p) {
         substring(0, 1, train2[i%5], debut_train2, sizeof(debut_train2));
         substring(6, 1, train2[i%5], fin_train2, sizeof(fin_train2));
 
-        //sem_wait(trainB);
         // Compare avec les autres trains le trajet et bloque si la trajectoire inverse d'un autre train est déjà en cours :
         if(strcmp(debut_train2, fin_train3) == 0 && strcmp(fin_train2, debut_train3) == 0) {
           pthread_rwlock_rdlock(&lock);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
           printf("Train 2 en approche en sens inverse %s\n" , train2[i%5]);
+          sleep(rand()%_TEMPS_);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
+          printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
           pthread_rwlock_unlock(&lock);
         }
         // Compare avec les autres trains le trajet et bloque si la trajectoire inverse d'un autre train est déjà en cours :
         else if(strcmp(debut_train2, fin_train1) == 0 && strcmp(fin_train2, debut_train1) == 0) {
           pthread_rwlock_rdlock(&lock);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
           printf("Train 2 en approche en sens inverse %s\n" , train2[i%5]);
+          sleep(rand()%_TEMPS_);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
+          printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
           pthread_rwlock_unlock(&lock);
         }
         else {
+          pthread_rwlock_rdlock(&lock);
           temps = clock() / 100;
-          printf("%f\n", (double) temps);
+          printf("%f - ", (double) temps);
           printf("Train 2 : %s\n", train2[(i%5)]);
-          sleep(3);
+          sleep(rand()%_TEMPS_);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
           printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
           fflush(stdout);
+          pthread_rwlock_unlock(&lock);
+
         }
 
         i++;
@@ -102,7 +132,7 @@ void* TrainB(void* p) {
     return NULL;
 }
 
-void* TrainC(void* p) {
+void* TrainTrois(void* p) {
     int i = 0;
     char train3[5][8] = {"A --> B", "B --> D", "D --> C", "C --> E", "E --> A"};
 
@@ -111,24 +141,41 @@ void* TrainC(void* p) {
         substring(0, 1, train3[i%5], debut_train3, sizeof(debut_train3));
         substring(6, 1, train3[i%5], fin_train3, sizeof(fin_train3));
 
-        // Compare avec les autres trains le trajet :
+        // Compare avec les autres trains le trajet et bloque si la trajectoire inverse d'un autre train est déjà en cours :
         if(strcmp(debut_train3, fin_train2) == 0 && strcmp(fin_train3, debut_train2) == 0) {
           pthread_rwlock_rdlock(&lock);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
           printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)] );
+          sleep(rand()%_TEMPS_);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
+          printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
           pthread_rwlock_unlock(&lock);
         }
+        // Compare avec les autres trains le trajet et bloque si la trajectoire inverse d'un autre train est déjà en cours :
         else if(strcmp(debut_train3, fin_train1) == 0 && strcmp(fin_train3, debut_train1) == 0) {
           pthread_rwlock_rdlock(&lock);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
           printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)]);
+          sleep(rand()%_TEMPS_);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
+          printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
           pthread_rwlock_unlock(&lock);
         }
         else {
+          pthread_rwlock_rdlock(&lock);
           temps = clock() / 100;
-          printf("%f\n", (double) temps);
+          printf("%f - ", (double) temps);
           printf("Train 3 : %s\n", train3[(i%5)]);
-          sleep(3);
+          sleep(rand()%_TEMPS_);
+          temps = clock();
+          printf("%f - ", (double) temps / 100);
           printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
           fflush(stdout);
+          pthread_rwlock_unlock(&lock);
         }
 
         i++;
@@ -139,10 +186,10 @@ void* TrainC(void* p) {
 int main() {
     pthread_t ID[3];
 
-    pthread_create(&ID[0], NULL, TrainB, NULL);
-    pthread_create(&ID[1], NULL, TrainC, NULL);
+    pthread_create(&ID[0], NULL, TrainDeux, NULL);
+    pthread_create(&ID[1], NULL, TrainTrois, NULL);
 
-    TrainA(NULL);
+    TrainUn(NULL);
 
     pthread_join(ID[0], 0);
     pthread_join(ID[1], 0);
