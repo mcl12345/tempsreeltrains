@@ -49,10 +49,20 @@ void* TrainUn(void* p) {
         substring(6, 1, train1[i%4], fin_train1, sizeof(fin_train1));
 
         // Récupère le temps moyen d'un trajet complet
-        if ( strcmp(debut_train1, "B") == 0 && strcmp(fin_train1, "A") == 0 && rentre_train_un == 0) {
+        if ( strcmp(debut_train1, "B") == 0 && strcmp(fin_train1, "A") == 0) {
             clock_t temps_moyen = clock();
-            printf("\nLe temps moyen du train 1 est de : %f secondes\n\n", (double) temps_moyen / 100);
-            rentre_train_un = 1;
+            if (rentre_train_un == 0) {
+              printf("\nLe temps moyen du train 1 est de : %f secondes\n\n", (double) temps_moyen / 100);
+            }
+            else if (rentre_train_un == 1) {
+                temps_moyen = clock();
+                printf("\nLe temps moyen du train 1 est de : %f secondes\n\n", (double) temps_moyen / 200);
+            }
+            else if (rentre_train_un == 2) {
+                temps_moyen = clock();
+                printf("\nLe temps moyen du train 1 est de : %f secondes\n\n", (double) temps_moyen / 300);
+            }
+            rentre_train_un = rentre_train_un + 1;
         }
 
         // Compare avec les autres trains 2 et 3 le trajet du train 1 :
@@ -66,7 +76,7 @@ void* TrainUn(void* p) {
 
             printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
 
-            // Temps du trajet
+            // Temps du trajet de 1 à 3 secondes
             sleep(rand()%_TEMPS_);
 
             // Récupère le temps
@@ -87,7 +97,7 @@ void* TrainUn(void* p) {
 
           printf("Train 1 en approche en sens inverse %s\n", train1[i%4] );
 
-          // Temps du trajet
+          // Temps du trajet de 1 à 3 secondes
           sleep(rand()%_TEMPS_);
 
           // Récupère le temps
@@ -109,7 +119,7 @@ void* TrainUn(void* p) {
 
             printf("Train 1 : %s\n", train1[i%4]);
 
-            // Temps du trajet
+            // Temps du trajet de 1 à 3 secondes
             sleep(rand()%_TEMPS_);
 
             // Récupère le temps
@@ -133,15 +143,25 @@ void* TrainDeux(void* p) {
     char train2[5][8] = {"A --> B", "B --> D", "D --> C", "C --> B", "B --> A"};
 
     while (i >= 0) {
-        // Récupère le trajet du train 2 en global :
+      // Récupère le trajet du train 2 en global dans debut_train2 et dans fin_train2 :
         substring(0, 1, train2[i%5], debut_train2, sizeof(debut_train2));
         substring(6, 1, train2[i%5], fin_train2, sizeof(fin_train2));
 
         // Récupère le temps moyen d'un trajet complet
-        if ( strcmp(debut_train2, "B") == 0 && strcmp(fin_train2, "A") == 0 && rentre_train_deux == 0) {
+        if ( strcmp(debut_train2, "B") == 0 && strcmp(fin_train2, "A") == 0) {
             clock_t temps_moyen = clock();
-            printf("\nLe temps moyen du train 2 est de : %f secondes\n\n", (double) temps_moyen / 100);
-            rentre_train_deux = 1;
+            if (rentre_train_deux == 0) {
+              printf("\nLe temps moyen du train 2 est de : %f secondes\n\n", (double) temps_moyen / 100);
+            }
+            else if (rentre_train_deux == 1) {
+                temps_moyen = clock();
+                printf("\nLe temps moyen du train 2 est de : %f secondes\n\n", (double) temps_moyen / 200);
+            }
+            else if (rentre_train_deux == 2) {
+                temps_moyen = clock();
+                printf("\nLe temps moyen du train 2 est de : %f secondes\n\n", (double) temps_moyen / 300);
+            }
+            rentre_train_un = rentre_train_un + 1;
         }
 
         // Compare avec les autres trains le trajet :
@@ -222,15 +242,25 @@ void* TrainTrois(void* p) {
     char train3[5][8] = {"A --> B", "B --> D", "D --> C", "C --> E", "E --> A"};
 
     while (i >= 0) {
-        // Récupère le trajet du train 3 en global :
+        // Récupère le trajet du train 3 en global dans debut_train3 et dans fin_train3 :
         substring(0, 1, train3[i%5], debut_train3, sizeof(debut_train3));
         substring(6, 1, train3[i%5], fin_train3, sizeof(fin_train3));
 
         // Récupère le temps moyen d'un trajet complet
-        if ( strcmp(debut_train3, "E") == 0 && strcmp(fin_train3, "A") == 0 && rentre_train_trois == 0) {
+        if ( strcmp(debut_train3, "E") == 0 && strcmp(fin_train3, "A") == 0) {
             clock_t temps_moyen = clock();
-            printf("\nLe temps moyen du train 3 est de : %f secondes\n\n", (double) temps_moyen / 100);
-            rentre_train_trois = 1;
+            if (rentre_train_trois == 0) {
+              printf("\nLe temps moyen du train 3 est de : %f secondes\n\n", (double) temps_moyen / 100);
+            }
+            else if (rentre_train_trois == 1) {
+                temps_moyen = clock();
+                printf("\nLe temps moyen du train 3 est de : %f secondes\n\n", (double) temps_moyen / 200);
+            }
+            else if (rentre_train_trois == 2) {
+                temps_moyen = clock();
+                printf("\nLe temps moyen du train 3 est de : %f secondes\n\n", (double) temps_moyen / 300);
+            }
+            rentre_train_un = rentre_train_un + 1;
         }
 
         // Compare avec les autres trains le trajet :
