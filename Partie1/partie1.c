@@ -52,15 +52,15 @@ void* TrainUn(void* p) {
         if ( strcmp(debut_train1, "B") == 0 && strcmp(fin_train1, "A") == 0) {
             clock_t temps_moyen = clock();
             if (rentre_train_un == 0) {
-              printf("\nLe temps moyen du train 1 est de : %f secondes\n\n", (double) temps_moyen / 100);
+              printf("\nLe temps moyen du trajet du train 1 est de : %f secondes\n\n", (double) temps_moyen / 100);
             }
             else if (rentre_train_un == 1) {
                 temps_moyen = clock();
-                printf("\nLe temps moyen du train 1 est de : %f secondes\n\n", (double) temps_moyen / 200);
+                printf("\nLe temps moyen du trajet du train 1 est de : %f secondes\n\n", (double) temps_moyen / 200);
             }
             else if (rentre_train_un == 2) {
                 temps_moyen = clock();
-                printf("\nLe temps moyen du train 1 est de : %f secondes\n\n", (double) temps_moyen / 300);
+                printf("\nLe temps moyen du trajet du train 1 est de : %f secondes\n\n", (double) temps_moyen / 300);
             }
             rentre_train_un = rentre_train_un + 1;
         }
@@ -151,15 +151,15 @@ void* TrainDeux(void* p) {
         if ( strcmp(debut_train2, "B") == 0 && strcmp(fin_train2, "A") == 0) {
             clock_t temps_moyen = clock();
             if (rentre_train_deux == 0) {
-              printf("\nLe temps moyen du train 2 est de : %f secondes\n\n", (double) temps_moyen / 100);
+              printf("\nLe temps moyen du trajet du train 2 est de : %f secondes\n\n", (double) temps_moyen / 100);
             }
             else if (rentre_train_deux == 1) {
                 temps_moyen = clock();
-                printf("\nLe temps moyen du train 2 est de : %f secondes\n\n", (double) temps_moyen / 200);
+                printf("\nLe temps moyen du trajet du train 2 est de : %f secondes\n\n", (double) temps_moyen / 200);
             }
             else if (rentre_train_deux == 2) {
                 temps_moyen = clock();
-                printf("\nLe temps moyen du train 2 est de : %f secondes\n\n", (double) temps_moyen / 300);
+                printf("\nLe temps moyen du trajet du train 2 est de : %f secondes\n\n", (double) temps_moyen / 300);
             }
             rentre_train_un = rentre_train_un + 1;
         }
@@ -237,6 +237,7 @@ void* TrainDeux(void* p) {
     return NULL;
 }
 
+// Thread train 3
 void* TrainTrois(void* p) {
     int i = 0;
     char train3[5][8] = {"A --> B", "B --> D", "D --> C", "C --> E", "E --> A"};
@@ -250,15 +251,15 @@ void* TrainTrois(void* p) {
         if ( strcmp(debut_train3, "E") == 0 && strcmp(fin_train3, "A") == 0) {
             clock_t temps_moyen = clock();
             if (rentre_train_trois == 0) {
-              printf("\nLe temps moyen du train 3 est de : %f secondes\n\n", (double) temps_moyen / 100);
+              printf("\nLe temps moyen du trajet du train 3 est de : %f secondes\n\n", (double) temps_moyen / 100);
             }
             else if (rentre_train_trois == 1) {
                 temps_moyen = clock();
-                printf("\nLe temps moyen du train 3 est de : %f secondes\n\n", (double) temps_moyen / 200);
+                printf("\nLe temps moyen du trajet du train 3 est de : %f secondes\n\n", (double) temps_moyen / 200);
             }
             else if (rentre_train_trois == 2) {
                 temps_moyen = clock();
-                printf("\nLe temps moyen du train 3 est de : %f secondes\n\n", (double) temps_moyen / 300);
+                printf("\nLe temps moyen du trajet du train 3 est de : %f secondes\n\n", (double) temps_moyen / 300);
             }
             rentre_train_un = rentre_train_un + 1;
         }
@@ -292,7 +293,7 @@ void* TrainTrois(void* p) {
 
           // Récupère le temps
           temps = clock();
-          printf("%f - ", (double) temps / 100);
+          printf("%f - ", (double) temps / 100);   // Et l'affiche
 
           printf("Train 3 en approche en sens inverse %s\n", train3[(i%5)]);
 
@@ -301,7 +302,7 @@ void* TrainTrois(void* p) {
 
           // Récupère le temps
           temps = clock();
-          printf("%f - ", (double) temps / 100);
+          printf("%f - ", (double) temps / 100);    // Et l'affiche
 
           printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
 
