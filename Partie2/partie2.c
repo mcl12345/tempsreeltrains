@@ -26,6 +26,8 @@ int rentre_train_trois  = 0;
 
 clock_t temps;
 
+int inverse = 0;
+
 // pour compiler : gcc partie2.c -lpthread
 
 char *substring(size_t start, size_t stop, const char *src, char *dst, size_t size)
@@ -76,9 +78,11 @@ void* _TrainUn_(void* p) {
 
             printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
 
+           inverse = 1;
+           
             sem_post(semTrainDeux);
         }
-        else if(strcmp(debut_train1, fin_train3) == 0 && strcmp(fin_train1, debut_train3) == 0) {
+        if(strcmp(debut_train1, fin_train3) == 0 && strcmp(fin_train1, debut_train3) == 0) {
             sem_wait(semTrainUn);
 
             // Récupère le temps
@@ -98,10 +102,12 @@ void* _TrainUn_(void* p) {
             printf("%f - ", (double) temps / 100);   // Et l'affiche
 
             printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
-
+           
+           inverse = 1;
+           
             sem_post(semTrainDeux);
         }
-        else {
+        if (!inverse) {
             // Récupère le temps
             temps = clock();
             printf("%f - ", (double) temps / 100);   // Et l'affiche
@@ -116,8 +122,10 @@ void* _TrainUn_(void* p) {
             printf("%f - ", (double) temps / 100);   // Et l'affiche
 
             printf("Le train 1 est arrivé à la gare : %s\n\n", fin_train1);
-
-            fflush(stdout);
+            
+           inverse = 0;
+           
+           fflush(stdout);
         }
 
         i++;
@@ -162,10 +170,12 @@ void* _TrainDeux_(void* p) {
             printf("%f - ", (double) temps / 100);   // Et l'affiche
 
             printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
+            
+           inverse = 1;
 
             sem_post(semTrainTrois);
         }
-        else if(strcmp(debut_train2, fin_train1) == 0 && strcmp(fin_train2, debut_train1) == 0) {
+        if(strcmp(debut_train2, fin_train1) == 0 && strcmp(fin_train2, debut_train1) == 0) {
             sem_wait(semTrainDeux);
 
             temps = clock();
@@ -182,10 +192,12 @@ void* _TrainDeux_(void* p) {
             printf("%f - ", (double) temps / 100);
 
             printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
-
-            sem_post(semTrainTrois);
+            
+           inverse = 1;
+           
+           sem_post(semTrainTrois);
         }
-        else {
+        if (!inverse) {
             temps = clock();
             printf("%f - ", (double) temps / 100);
 
@@ -198,8 +210,10 @@ void* _TrainDeux_(void* p) {
             printf("%f - ", (double) temps / 100);
 
             printf("Le train 2 est arrivé à la gare : %s\n\n", fin_train2);
-
-            fflush(stdout);
+            
+           inverse = 0;
+           
+           fflush(stdout);
         }
 
         i++;
@@ -241,6 +255,8 @@ void* _TrainTrois_(void* p) {
             printf("%f - ", (double) temps / 100);
 
             printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
+            
+           inverse = 1;
             sem_post(semTrainUn);
         }
         else if(strcmp(debut_train3, fin_train1) == 0 && strcmp(fin_train3, debut_train1) == 0) {
@@ -260,6 +276,8 @@ void* _TrainTrois_(void* p) {
             printf("%f - ", (double) temps / 100);
 
             printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
+            
+           inverse = 1;
             sem_post(semTrainUn);
         }
         else {
@@ -274,6 +292,8 @@ void* _TrainTrois_(void* p) {
             printf("%f - ", (double) temps / 100);
 
             printf("Le train 3 est arrivé à la gare : %s\n\n", fin_train3);
+            
+           inverse = 0;
 
             fflush(stdout);
         }
