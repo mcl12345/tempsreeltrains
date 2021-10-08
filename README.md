@@ -9,3 +9,8 @@ Trois sémaphores bloquant pour empêcher d'avoir un train qui arrive en sens in
 
 Partie 3 - Verrous
 Trois vérrous bloquant pour empêcher d'avoir un train qui arrive en sens inverse.
+
+Makefile
+ou
+gcc partie1.c -lpthread
+./a.out
